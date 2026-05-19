@@ -1,0 +1,93 @@
+CREATE TABLE roles(
+id int PRIMARY key AUTO_INCREMENT,
+name varchar(45)
+);
+-- Таблица Users
+
+CREATE TABLE Users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    login VARCHAR(45) NOT NULL,
+    email VARCHAR(45) NOT NULL UNIQUE,
+    password VARCHAR(45) NOT NULL,
+    avatar VARCHAR(45),
+    backimg VARCHAR(45),
+    inform TEXT NULL,
+    role int,
+    date_create DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (role) REFERENCES roles(id) 
+);
+
+CREATE TABLE roles (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(45) NOT NULL
+);
+
+-- Таблица posts
+
+CREATE TABLE posts (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user INT NOT NULL,
+    text TEXT NOT NULL,
+    date_create DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user) REFERENCES Users(id) ON DELETE CASCADE
+);
+
+-- Таблица Image
+
+CREATE TABLE Image (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    post INT NOT NULL,
+    place VARCHAR(45) NOT NULL,
+    FOREIGN KEY (post) REFERENCES posts(id) ON DELETE CASCADE
+);
+
+-- Таблица likes
+
+CREATE TABLE likes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user INT NOT NULL,
+    post INT NOT NULL,
+    date_create DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user) REFERENCES Users(id) ON DELETE CASCADE,
+    FOREIGN KEY (post) REFERENCES posts(id) ON DELETE CASCADE
+);
+
+-- Таблица comments
+
+CREATE TABLE comments (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user INT NOT NULL,
+    post INT NOT NULL,
+    text TEXT NOT NULL,
+    date_create DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user) REFERENCES Users(id) ON DELETE CASCADE,
+    FOREIGN KEY (post) REFERENCES posts(id) ON DELETE CASCADE
+);
+
+-- Таблица Subscriptions
+
+CREATE TABLE Subscripts (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    users INT NOT NULL, 
+    subs INT NOT NULL,   
+    date_create DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (users) REFERENCES Users(id) ON DELETE CASCADE,
+    FOREIGN KEY (subs) REFERENCES Users(id) ON DELETE CASCADE,
+    UNIQUE KEY unique_subscription (users, sub)
+);
+
+
+CREATE TABLE action_logs (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NULL, 
+    action_type VARCHAR(50) NOT NULL, 
+    target_type VARCHAR(20) NULL, 
+    target_id INT NULL,
+    details TEXT NULL, 
+    ip_address VARCHAR(45) NULL,
+    user_agent TEXT NULL,
+    date_create DATETIME DEFAULT CURRENT_TIMESTAMP,
+    
+    FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE SET NULL
+);
+
